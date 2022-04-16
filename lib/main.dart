@@ -85,5 +85,47 @@ class CircuitVerseMobile extends StatelessWidget {
         ),
       ),
     );
+    return MaterialApp(
+      home: NotificationApp()
+    );
+  }
+}
+
+class NotificationAppApp extends StatefulWidget {
+  @override
+  _NotificationAppState createState() => NotificationAppState();
+}
+
+class _NotificationAppState extends State<NotificationApp> {
+
+  FlutterLocalNotificationsPlugin localNotification;
+  void initState(){
+    super.initState();
+    var androidInitialize = newAndroidInitializationSettings('ic_launcher')//This function is to initialize android setting, 
+
+    var ioSInitialize = newIOSInitializationSettings();
+    var initializationSettings = new InitializationSettings(android: androidInitialize , ioS: ioSInitialize)
+    localNotification = new FlutterLocalNotificationsPlugin();
+    localNotification.initialize(initializationSettings);
+  }
+  Future _showNotification() async{
+    var androidDetails = new AndroidNotificationDetails("channelId",
+     "Local Notification", 
+     "This is the description of the Notification, you can write anything", importance: Importance.high );
+     var iosDetails = new IOSNotificationDetails();
+     var generalNotificationDetails = new AndroidNotificationDetails(android: androidDetails, iOS: iosDetails);
+     await localNotification.show(0,"Hello, From CircuitVerse","The Body of the Notification",generalNotificationDetails)
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Text("Click the button to receive a notification"),
+      )
+      floatingActionButton: floatingActionButton(
+        onPressed: _showNotification,
+        child: Icon(Icons.notifications),
+      ),
+    );
   }
 }
